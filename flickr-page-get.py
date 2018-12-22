@@ -3,7 +3,7 @@
 """
 flickr-page-get.py
 Copyright (c) 2018 likuku. All rights reserved.
-last update on Dec22,2018
+last update on Dec23,2018
 """
 
 import sys
@@ -19,6 +19,14 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
                'Mozilla/5.0 (Windows; Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5',
                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',)
 # headers={'User-Agent': random.choice(USER_AGENTS)}
+
+def check_photo_page_in_local(_str_input_page_url,_str_input_photo_dir_path):
+    _url_str = _str_input_page_url
+    _dir_path_str = _str_input_photo_dir_path
+    _page_name_str = _url_str.rsplit('/',1)[1]
+    _page_path_str = '%s/html/%s.html' % (_dir_path_str,_page_name_str)
+    _bool_src_media_path = os.path.isfile(_page_path_str)
+    return(_bool_src_media_path)
 
 def get_photo_page(_str_input_page_url,_str_input_photo_dir_path):
     _url_str = _str_input_page_url
@@ -88,6 +96,10 @@ def main():
     _str_list_photo = get_str_list_photo_file_name_in_dir(_str_raw_photo_dir)
     for _str_photo_file in _str_list_photo:
         _str_photo_page_url = make_str_photo_page_url(_str_flickr_id,_str_photo_file)
+        if check_photo_page_in_local(_str_photo_page_url,_str_raw_photo_dir):
+            continue
+        else:
+            pass
         print(_str_photo_page_url)
         get_photo_page(_str_photo_page_url,_str_raw_photo_dir)
         time.sleep(random.choice((0.1,0.2,0.3,0.4,0.5)))
